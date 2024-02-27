@@ -15,14 +15,6 @@ if isdeployed==1
     if parallel_flag==0
         disp_progress(app,strcat('Inside TIREM5, succesfully initialized tiremSetup'))
     end
-
-% %     addpath('C:\USGS\TIREM5')
-% %     which_str=which('libtirem3.dll');
-% %     %%%%Now isolate the folder
-% %     temp_strsplit = split(which_str,'\');
-% %     temp_strsplit(end)=[];
-% %     %%%tiremSetup('C:\USGS\TIREM5') 
-% %     tiremSetup(fullfile(temp_strsplit{:}))
 else
     NET.addAssembly(fullfile('C:\USGS', 'SEADLib.dll'));
     tiremSetup('C:\USGS\TIREM5')  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Change this to the folder of the TIREM dlls 

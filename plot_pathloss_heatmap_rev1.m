@@ -22,5 +22,6 @@ function plot_pathloss_heatmap_rev1(app,data_label1,string_prop_model,grid_spaci
                 filename1=strcat('Pathloss_Heatmap','_',data_label1,'_',string_prop_model,'_',num2str(grid_spacing),'km.png');
                 saveas(gcf,char(filename1))
                 pause(0.1);
+                close(f1)
 
 end

@@ -1,28 +1,24 @@
-function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_pathloss_info_rev1(app,data_label1,string_prop_model,grid_spacing,tf_recalculate,base_protection_pts,sim_array_list_bs,sim_number,tf_tropo_cut)
+function [array_full_pl_data,full_prop_mode_data]=load_full_pathloss_info_multi_rel_rev3(app,data_label1,string_prop_model,grid_spacing,tf_recalculate,base_protection_pts,sim_array_list_bs,sim_number,tf_tropo_cut,reliability)
 
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Function
                 filename_array_full_pl_data=strcat(data_label1,'_array_full_pl_data_',string_prop_model,'_',num2str(grid_spacing),'km.mat');
                 [var_exist_array_full_pl_data]=persistent_var_exist_with_corruption(app,filename_array_full_pl_data);
 
                 filename_full_prop_mode_data=strcat(data_label1,'_full_prop_mode_data_',string_prop_model,'_',num2str(grid_spacing),'km.mat');
                 [var_exist_full_prop_mode_data]=persistent_var_exist_with_corruption(app,filename_full_prop_mode_data);
 
-                filename_full_rx_angle_data=strcat(data_label1,'_full_rx_angle_data_',string_prop_model,'_',num2str(grid_spacing),'km.mat');
-                [var_exist_full_rx_angle_data]=persistent_var_exist_with_corruption(app,filename_full_rx_angle_data);
-% %                 if strcmp(string_prop_model,'ITM')
-% %                     var_exist_full_rx_angle_data=2;
-% %                 end
-
                 if tf_recalculate==1
                     var_exist_full_prop_mode_data=0;
                 end
 
-                if var_exist_full_prop_mode_data==2 && var_exist_full_rx_angle_data==2 && var_exist_array_full_pl_data==2
+                if var_exist_full_prop_mode_data==2 && var_exist_array_full_pl_data==2
                     retry_load=1;
                     while(retry_load==1)
                         try
                             load(filename_array_full_pl_data,'array_full_pl_data')
                             load(filename_full_prop_mode_data,'full_prop_mode_data')
-                            load(filename_full_rx_angle_data,'full_rx_angle_data')
                             pause(0.1)
                             retry_load=0;
                         catch
@@ -32,15 +28,18 @@ function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_p
                     end
                     pause(0.1)
                 else
-                    [num_pts,~]=size(base_protection_pts);
-                    [num_grid_pts,~]=size(sim_array_list_bs);
+                    [num_pts,~]=size(base_protection_pts)
+                    [num_grid_pts,~]=size(sim_array_list_bs)
                     full_array_prop_mode=NaN(num_grid_pts,num_pts);
-                    full_rx_angle_data=NaN(num_grid_pts,num_pts);
-                    %full_tx_angle_data=NaN(num_grid_pts,num_pts);
-                    array_full_pl_data=NaN(num_grid_pts,num_pts);
+                    num_rels=length(reliability)
+                    if num_rels>1 && matches(string_prop_model,'ITM')
+                        array_full_pl_data=NaN(num_grid_pts,num_pts,num_rels);
+                    else
+                        array_full_pl_data=NaN(num_grid_pts,num_pts);
+                    end
+
                     full_prop_mode_data=NaN(num_grid_pts,num_pts);
                     for point_idx=1:1:num_pts
-                        point_idx
                         %%%%%%%%%'Load all the point pathloss calculations'
                         %%%%%%Persistent Load
                         file_name_pathloss=strcat(string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
@@ -90,8 +89,6 @@ function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_p
                         end
 
 
-                        
-
                         if strcmp(string_prop_model,'ITM')
                             los_idx=find(prop_mode==0);
                             dif1_idx=find(prop_mode==4);
@@ -106,53 +103,59 @@ function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_p
                             array_rx_angle=NaN(num_grid_pts,1);
                         end
 
-
                        if length(prop_mode)~=(length(los_idx)+length(diff_idx)+length(tropo_idx))
-                           'Error: Check prop_mode lengths'
-                           pause;
-                       end
+                            'Error: Check prop_mode lengths'
+                            pause;
+                        end
 
-                       %%%%%%%%Now change to 
-                       % % %  Mode of propagation
-                       % % % 1 = Line of Sight
-                       % % % 2 = Diffraction
-                       % % % 3 = Troposcatter
+                        %%%%%%%%Now change to
+                        % % %  Mode of propagation
+                        % % % 1 = Line of Sight
+                        % % % 2 = Diffraction
+                        % % % 3 = Troposcatter
 
-                       array_prop_mode=NaN(size(prop_mode));
-                       array_prop_mode(los_idx)=1;
-                       array_prop_mode(diff_idx)=2;
-                       array_prop_mode(tropo_idx)=3;
+                        array_prop_mode=NaN(size(prop_mode));
+                        array_prop_mode(los_idx)=1;
+                        array_prop_mode(diff_idx)=2;
+                        array_prop_mode(tropo_idx)=3;
 
-                       full_array_prop_mode(:,point_idx)=array_prop_mode;
+                        full_array_prop_mode(:,point_idx)=array_prop_mode;
 
-                      % if strcmp(string_prop_model,'TIREM')
-                           full_rx_angle_data(:,point_idx)=array_rx_angle;
-                           %full_tx_angle_data(:,point_idx)=array_tx_angle;
-                       %end
+                        % if strcmp(string_prop_model,'TIREM')
+                        %full_rx_angle_data(:,point_idx)=array_rx_angle;
+                        %full_tx_angle_data(:,point_idx)=array_tx_angle;
+                        %end
 
-
-                       if tf_tropo_cut==1
+                        if tf_tropo_cut==1
                             %%%%%% 'If it is tropo, we ignore the pathloss value'
                             pathloss(tropo_idx,:)=NaN(1);
-                       end
+                        end
 
-                       array_full_pl_data(:,point_idx)=pathloss;
-                       full_prop_mode_data(:,point_idx)=array_prop_mode;
 
-% % %                        %%%%%%%%%Find the Minimum Path Loss for each grid point and reliability (Doing this later)
-% % %                        if point_idx==1
-% % %                            min_full_pl_data=pathloss;
-% % %                            min_full_prop_mode_data=array_prop_mode;
-% % %                        else
-% % %                            min_full_pl_data=min(min_full_pl_data,pathloss,"omitnan");
-% % %                            min_full_prop_mode_data=min(min_full_prop_mode_data,array_prop_mode);
-% % %                        end
-                  
+                        if num_rels>1 && matches(string_prop_model,'ITM')
+                            for rel_idx=1:1:num_rels
+                                array_full_pl_data(:,point_idx,rel_idx)=pathloss(:,rel_idx);
+                            end
+                        else
+                            array_full_pl_data(:,point_idx)=pathloss;
+                        end
+
+                        full_prop_mode_data(:,point_idx)=array_prop_mode;
+
+                        % % %                        %%%%%%%%%Find the Minimum Path Loss for each grid point and reliability (Doing this later)
+                        % % %                        if point_idx==1
+                        % % %                            min_full_pl_data=pathloss;
+                        % % %                            min_full_prop_mode_data=array_prop_mode;
+                        % % %                        else
+                        % % %                            min_full_pl_data=min(min_full_pl_data,pathloss,"omitnan");
+                        % % %                            min_full_prop_mode_data=min(min_full_prop_mode_data,array_prop_mode);
+                        % % %                        end
+
                     end
 
-% % % %                     size(min_full_pl_data)
-% % % %                     nan_pl_idx=find(isnan(min_full_pl_data(:,1)));
-% % % %                     size(nan_pl_idx)
+                    % % % %                     size(min_full_pl_data)
+                    % % % %                     nan_pl_idx=find(isnan(min_full_pl_data(:,1)));
+                    % % % %                     size(nan_pl_idx)
 
 
                     retry_save=1;
@@ -160,7 +163,6 @@ function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_p
                         try
                             save(filename_array_full_pl_data,'array_full_pl_data')
                             save(filename_full_prop_mode_data,'full_prop_mode_data')
-                            save(filename_full_rx_angle_data,'full_rx_angle_data')
                             pause(0.1)
                             retry_save=0;
                         catch
@@ -171,4 +173,5 @@ function [array_full_pl_data,full_prop_mode_data,full_rx_angle_data]=load_full_p
                     pause(0.1)
                 end
 
+                size(array_full_pl_data)
 end

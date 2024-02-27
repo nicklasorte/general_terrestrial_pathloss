@@ -1,5 +1,7 @@
-function [pathloss,prop_mode]=parfor_parchunk_PropModel_angels_rev4(app,cell_sim_chuck_idx,sub_point_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model)
+function [pathloss,prop_mode]=parfor_rand_parchunk_PropModel_angels_rev5(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx)
 
+
+sub_point_idx=array_rand_chunk_idx(chunk_idx);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Parchunk ParWrapper
 sub_idx=cell_sim_chuck_idx{sub_point_idx};
@@ -7,7 +9,7 @@ sub_sim_array_list_bs=sim_array_list_bs(sub_idx,:);
 sim_pt=base_protection_pts(point_idx,:);
 
 %%%%%%Check/Calculate path loss
-file_name_pathloss=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
+file_name_pathloss=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat')
 file_name_propmode=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_prop_mode_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
 [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
 [var_exist2]=persistent_var_exist_with_corruption(app,file_name_propmode);
