@@ -29,5 +29,6 @@ while(tf_delete==1)
     end
 end
 disp_progress(app,strcat('Pathloss Clean up: Line31: Inside persistent_delete_rev1:',filename))   
+%%%%%%%This seems to be the last message
 
 end
