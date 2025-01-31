@@ -229,6 +229,9 @@ if ~isempty(zero_idx)==1
                             end
                         end
 
+                        % 'Pause before reassembling'
+                        % pause;
+
                         %%%%%%%%%Then Assemble with for loop
                         cell_pathloss=cell(num_chunks,1);
                         cell_prop_mode=cell(num_chunks,1);
@@ -238,8 +241,9 @@ if ~isempty(zero_idx)==1
                             horzcat(chunk_idx,sub_point_idx)
 
                             if tf_stop_subchunk==0
+                                temp_parallel_flag=0
                                 disp_progress(app,strcat('Part1 Calc Pathloss:: Line 241: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
-                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
 
                                 disp_progress(app,strcat('Part1 Calc Pathloss:: Line 245: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                             end
@@ -288,7 +292,21 @@ if ~isempty(zero_idx)==1
                             %%%%%%%%%ITM prop mode decoder ring
                             %%%% 0 LOS, 4 Single Horizon, 5 Difraction Double Horizon, 8 Double Horizon, 9 Difraction Single Horizon, 6 Troposcatter Single Horizon, 10 Troposcatter Double Horizon, 333 Error
 
+                            
                             %%%%%Need to convert the ITM prop mode number to a string (later on).
+                            
+                            [num_rel]=length(reliability)
+                            [num_path,num_pl_rel]=size(pathloss)
+                            [num_bs,~]=size(sim_array_list_bs)
+                            if num_path~=num_bs
+                                  disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 298: Pause Error: Number of Pathloss:',num2str(point_idx)))
+                                  pause;
+                            end
+                            if num_rel~=num_pl_rel
+                                  disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 302: Pause Error: Number of Reliability:',num2str(point_idx)))
+                                  pause;
+                            end
+       
 
                             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Check to see if it exists before saving it.
                             [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
