@@ -6,10 +6,11 @@ disp_progress(app,strcat('Propagation Clean Up: Line 4'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Function: 
 cell_status_filename=strcat('cell_',string_prop_model,'_',num2str(sim_number),'_chunk_cleanup_status.mat')  
 label_single_filename=strcat(string_prop_model,'_',num2str(sim_number),'_chunk_cleanup_status')
-location_table=table([1:1:length(folder_names)]',folder_names)
+%location_table=table([1:1:length(folder_names)]',folder_names)
 
 %%%%%%%%%%Need a list because going through 470 folders takes 17 minutes
-[cell_status]=initialize_or_load_generic_status_rev1(app,folder_names,cell_status_filename);
+%[cell_status]=initialize_or_load_generic_status_rev1(app,folder_names,cell_status_filename);
+[cell_status,folder_names]=initialize_or_load_generic_status_expand_rev2(app,rev_folder,cell_status_filename);
 if tf_reclean==1
     cell_status(:,2)=num2cell(0);
 end
