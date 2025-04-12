@@ -42,6 +42,12 @@ TropoClim_data=int32(TropoClim);
 try
     %Calculate Radar Radio Climate
     tropo_value_radar=get_txt_value_GUI(app,sim_pt(1),sim_pt(2),TropoClim_data); %Gets the Climate of each point
+    % % % tropo_value_radar=get_txt_value_rev2(app,sim_pt(1),sim_pt(2),TropoClim_data); %Gets the Climate of each point
+    % % % if isnan(tropo_value_radar)
+    % % %     tropo_value_radar
+    % % %     'tropo_value_radar is NaN'
+    % % %     pause;
+    % % % end
 catch
     tropo_value_radar=int32(7);
     % 1 Equatorial, 2 Continental Subtorpical, 3 Maritime Tropical, 4 Desert, 5 Continental Temperate, 6 Maritime Over Land, 7 Maritime Over Sea
@@ -98,6 +104,11 @@ for i=1:num_bs  %%%%For Now, send in CBSD one at a time
     catch
         RadClim=int32(5);
         save(strcat('ERROR_RadClim_CBSDnum',num2str(i),'_',num2str(sim_pt(1)),'_',num2str(sim_pt(2)),'.mat'),'RadClim')
+        'ERROR_RadClim_CBSDnum: ITMP2P_mechanism_rev4_embed_height:Line 101'
+        tropo_value_radar
+        sim_pt
+        sim_array_list_bs(i,1:2)
+        %pause
     end
     
     try
@@ -106,6 +117,10 @@ for i=1:num_bs  %%%%For Now, send in CBSD one at a time
     catch
         Refrac=301;
         save(strcat('ERROR_Refrac_CBSDnum',num2str(i),'_',num2str(sim_pt(1)),'_',num2str(sim_pt(2)),'.mat'),'Refrac')
+        'ERROR_Refrac_CBSDnum: ITMP2P_mechanism_rev4_embed_height: Line 114'
+        sim_pt
+        sim_array_list_bs(i,1:2)
+        %pause;
     end
     
     

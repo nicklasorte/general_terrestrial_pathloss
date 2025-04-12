@@ -1,5 +1,11 @@
 function [tropo_value]=find_tropo_itu617_parfor_GUI(app,single_list_cbsd,TropoClim,tropo_value_radar)
             temp_tropo=get_txt_value_GUI(app,single_list_cbsd(1),single_list_cbsd(2),TropoClim); %Gets the Climate of each point
+            %temp_tropo=get_txt_value_rev2(app,single_list_cbsd(1),single_list_cbsd(2),TropoClim); %Gets the Climate of each point
+            % % if isnan(temp_tropo)
+            % %     temp_tropo
+            % %     'temp_tropo is NaN'
+            % %     pause;
+            % % end
             if temp_tropo==0 && tropo_value_radar~=0
                 tropo_value=tropo_value_radar;
             end
