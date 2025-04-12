@@ -1,5 +1,4 @@
-function part1_calc_pathloss_point_clean_rev9(app,rev_folder,folder_names,parallel_flag,sim_number,reliability,confidence,FreqMHz,Tpol,workers,string_prop_model,tf_recalc_pathloss,tf_server_status)
-
+function part1_calc_pathloss_point_clean_rev10(app,rev_folder,folder_names,parallel_flag,sim_number,reliability,confidence,FreqMHz,Tpol,workers,string_prop_model,tf_recalc_pathloss,tf_server_status)
 
 
 % % % % % % % % % % % % % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Randomize the chunk
@@ -151,7 +150,7 @@ if ~isempty(zero_idx)==1
                    %%%%%%Parchunk even if we have no parpool
                 [num_pts,~]=size(base_protection_pts);
                 [poolobj,cores]=start_parpool_poolsize_app(app,parallel_flag,workers);
-                disp_progress(app,strcat('Part1 Calc Pathloss: Line 160'))     
+                disp_progress(app,strcat('Part1 Calc Pathloss: Line 153'))     
                 %%%%%server_status_rev1(app)
                 server_status_rev2(app,tf_server_status)
 
@@ -183,7 +182,7 @@ if ~isempty(zero_idx)==1
                     'Error:Check Chunk IDX'
                     pause;
                 end
-                 disp_progress(app,strcat('Part1 Calc Pathloss: Line 187'))  
+                 disp_progress(app,strcat('Part1 Calc Pathloss: Line 185'))  
 
 
                  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%Randomize the Point Order for
@@ -203,13 +202,12 @@ if ~isempty(zero_idx)==1
                  end
                  array_rand_chunk_idx
 
-
                 [hWaitbar_pathloss,hWaitbarMsgQueue_pathloss]= ParForWaitbarCreateMH_time('Path Loss: ',num_pts*num_chunks);    %%%%%%% Create ParFor Waitbar, this one covers points and chunks
                 for rand_pt_idx=1:1:num_pts
                     point_idx=array_rand_point_idx(rand_pt_idx)
 
                     server_status_rev2(app,tf_server_status)
-                    disp_progress(app,strcat('Part1 Calc Pathloss: Line 207, point_idx:',num2str(point_idx)))   
+                    disp_progress(app,strcat('Part1 Calc Pathloss: Line 211, point_idx:',num2str(point_idx)))   
                     file_name_pathloss=strcat(string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
                     file_name_prop_mode=strcat(string_prop_model,'_prop_mode_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
 
@@ -220,17 +218,13 @@ if ~isempty(zero_idx)==1
                         var_exist1=0;
                     end
 
-                    disp_progress(app,strcat('Part1 Calc Pathloss:: Line 218: Point Idx:Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
+                    disp_progress(app,strcat('Part1 Calc Pathloss:: Line 222: Point Idx:Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
 
                     if var_exist1==0 || var_exist2==0
                         if parallel_flag==1
                             parfor chunk_idx=1:num_chunks  %%%%%%%%%Parfor
-% % % % % % % % % % %                                %%%%%%%%%%%%%%%Need to add a check for the
-% % % % % % % % % % %                                %%%%%%%%%%%%%%%file_name_pathloss and
-% % % % % % % % % % %                                %%%%%%%%%%%%%%%file_name_prop_mode inside
-% % % % % % % % % % %                                %%%%%%%%%%%%%%%the parfor_rand_parchunk_PropModel
-                                %%parfor_rand_parchunk_PropModel_angels_rev5(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx);
-                                parfor_rand_parchunk_PropModel_precheck_rev6(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                                %parfor_rand_parchunk_PropModel_precheck_rev6(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                                 parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
                                 hWaitbarMsgQueue_pathloss.send(0);
                             end
                         end
@@ -244,11 +238,11 @@ if ~isempty(zero_idx)==1
                             horzcat(chunk_idx,sub_point_idx)
 
                             if tf_stop_subchunk==0
-                                disp_progress(app,strcat('Part1 Calc Pathloss:: Line 2236: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
-                                %%%%[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx}]=parfor_parchunk_PropModel_angels_rev4(app,cell_sim_chuck_idx,sub_point_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model);
-                                %%%%%%%%%%%%%%%%%%%[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx}]=parfor_rand_parchunk_PropModel_angels_rev5(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx);
-                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev6(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                                disp_progress(app,strcat('Part1 Calc Pathloss:: Line 252: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
+                                disp_progress(app,strcat('Part1 Calc Pathloss:: Line 241: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
+                                %[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev6(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                                 [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+
+                                disp_progress(app,strcat('Part1 Calc Pathloss:: Line 245: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                             end
                             tf_stop_subchunk
                             %%%%Once the tf_stop_subchunk
@@ -259,47 +253,57 @@ if ~isempty(zero_idx)==1
                             end
                         end
 
-                        prop_mode=vertcat(cell_prop_mode{:});
-                        pathloss=vertcat(cell_pathloss{:});
-                        [num_pl,~]=size(pathloss);
+                        if tf_stop_subchunk==0 %%%%%%%Only save if we didn't stop the chunk
+                            prop_mode=vertcat(cell_prop_mode{:});
+                            pathloss=vertcat(cell_pathloss{:});
+                            [num_pl,~]=size(pathloss);
 
-                        if num_pl~=num_bs
-                            horzcat(num_pl,num_bs)
-                            disp_progress(app,strcat('Part1 Calc Pathloss: Line 251: Pause Error: Number of Pathloss/Base Station:',num2str(point_idx)))
-                            pause;
-                        end
-                        %%%%server_status_rev1(app)
-                        server_status_rev2(app,tf_server_status)
-
-                        %%%%%%%%%ITM prop mode decoder ring
-                        %%%% 0 LOS, 4 Single Horizon, 5 Difraction Double Horizon, 8 Double Horizon, 9 Difraction Single Horizon, 6 Troposcatter Single Horizon, 10 Troposcatter Double Horizon, 333 Error
-
-                        %%%%%Need to convert the ITM prop mode number to a string (later on).
-
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Check to see if it exists before saving it.
-                        [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
-                        [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
-                        if var_exist1==0 || var_exist2==0
-                            if any(isnan(pathloss))
-                                disp_progress(app,strcat('Part1 Calc Pathloss: Line 284: Pause Error: Pathloss is NaN:',num2str(point_idx)))
+                            if num_pl~=num_bs
+                                horzcat(num_pl,num_bs)
+                                disp_progress(app,strcat('Part1 Calc Pathloss: Line 263: Pause Error: Number of Pathloss/Base Station:',num2str(point_idx)))
                                 pause;
                             end
-                            retry_save=1;
-                            while(retry_save==1)
-                                try
-                                    save(file_name_pathloss,'pathloss')
-                                    save(file_name_prop_mode,'prop_mode')
-                                    retry_save=0;
-                                catch
-                                    retry_save=1;
-                                    pause(1)
+                            %%%%server_status_rev1(app)
+                            server_status_rev2(app,tf_server_status)
+
+                            %%%%%%%%%ITM prop mode decoder ring
+                            %%%% 0 LOS, 4 Single Horizon, 5 Difraction Double Horizon, 8 Double Horizon, 9 Difraction Single Horizon, 6 Troposcatter Single Horizon, 10 Troposcatter Double Horizon, 333 Error
+
+                            %%%%%Need to convert the ITM prop mode number to a string (later on).
+
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Check to see if it exists before saving it.
+                            [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
+                            [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
+                            if var_exist1==0 || var_exist2==0
+                                if any(isnan(pathloss))
+                                    disp_progress(app,strcat('Part1 Calc Pathloss: Line 279: Pause Error: Pathloss is NaN:',num2str(point_idx)))
+                                    pause;
                                 end
+                                retry_save=1;
+                                while(retry_save==1)
+                                    try
+                                        save(file_name_pathloss,'pathloss')
+                                        save(file_name_prop_mode,'prop_mode')
+                                        retry_save=0;
+                                    catch
+                                        retry_save=1;
+                                        pause(1)
+                                    end
+                                end
+                            end
+                        elseif tf_stop_subchunk==1
+                            %%%%%%%%%%%Just checking for me.
+                            [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
+                            [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
+                            if var_exist1==2 && var_exist2==2 %%%%%%Both exist
+                                    %%%%%%%%%%Nothing
+                            else                                
+                                disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 301: tf_stop_subchunk'))
+                                pause
                             end
                         end
 
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'This is where we then clean up the single point'
-                       
-
                         %%%%%%%%%%%%Double check that it is there.
                         tf_file_check_loop=1;
                         while(tf_file_check_loop==1)
@@ -315,7 +319,7 @@ if ~isempty(zero_idx)==1
                             if var_exist1==2 && var_exist2==2
                                 tf_file_check_loop=0;
                             else
-                                disp_progress(app,strcat('Path Loss Clean Up: Line 417: While Loop Waiting: The files dont exist and we should not delete the subchunks. Wait for other servers to catch up.'))
+                                disp_progress(app,strcat('Path Loss Clean Up: Line 322: While Loop Waiting: The files dont exist and we should not delete the subchunks. Wait for other servers to catch up.'))
                                 tf_file_check_loop=1;
                                 pause(10)
                             end
@@ -325,7 +329,7 @@ if ~isempty(zero_idx)==1
                         if var_exist1==2 && var_exist2==2
                             %%%%%%%%%Loop for deleting
                             for sub_point_idx=1:num_chunks
-                                disp_progress(app,strcat('Propagation: Pathloss Clean up: Line 427: point_idx:',num2str(point_idx),':',num2str(sub_point_idx)))
+                                disp_progress(app,strcat('Propagation: Pathloss Clean up Part 1 rev 10: Line 332: point_idx:',num2str(point_idx),':',num2str(sub_point_idx)))
                                 %%%%'The error is occuring after this point. Add additional disp points'
 
                                 file_name_pathloss_sub_delete=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
@@ -335,11 +339,9 @@ if ~isempty(zero_idx)==1
                                 persistent_delete_rev1(app,file_name_propmode_sub_delete)
                             end
                         else
-                            disp_progress(app,strcat('ERROR PAUSE: Pathloss Clean up: Line 204: point_idx:',num2str(point_idx),': While Loop did not work. The files dont exist and we should not delete the subchunks.'))
+                            disp_progress(app,strcat('ERROR PAUSE: Pathloss Clean up Part 1 Calc rev 10: Line 342: point_idx:',num2str(point_idx),': While Loop did not work. The files dont exist and we should not delete the subchunks.'))
                             pause;
                         end
-
-
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%End of clean up
                     else
                         %%%%%Need to decrement the waitbar
@@ -380,7 +382,7 @@ if ~isempty(zero_idx)==1
                         pause(0.1)
                     end
                 end
-                disp_progress(app,strcat('Part1 Calc Pathloss: Line 316: Updating Cell Status'))
+                disp_progress(app,strcat('Part1 Calc Pathloss: Line 385: Updating Cell Status'))
                 [cell_status]=update_generic_status_cell_rev1(app,folder_names,sim_folder,cell_status_filename);
                 %%%%server_status_rev1(app)
                 server_status_rev2(app,tf_server_status)
@@ -391,7 +393,7 @@ if ~isempty(zero_idx)==1
     delete(multi_hWaitbarMsgQueue);
     close(multi_hWaitbar);
 end
-disp_progress(app,strcat('Part1 Calc Pathloss: Line 319: Ending Pathloss Calculation'))
+disp_progress(app,strcat('Part1 Calc Pathloss: Line 396: Ending Pathloss Calculation'))
 %%%%server_status_rev1(app)
 server_status_rev2(app,tf_server_status)
 

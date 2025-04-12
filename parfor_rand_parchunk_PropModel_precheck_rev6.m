@@ -79,6 +79,19 @@ if var_exist1==0 || var_exist2==0  %%%%The file does not exist, calculate it.
     else
         disp_progress(app,strcat('ERROR in Logic: Pathloss: Parfor Parchunk:Line 79: Point:',num2str(point_idx),'_Subpoint:',num2str(sub_point_idx),'_',num2str(var_exist1_chunk),'_',num2str(var_exist2_chunk)))
         pause;
+
+        %%%%%%%%%%%%%I think we hit one of these pause errors. While one
+        %%%%%%%%%%%%%server was calculating a sub point, another server was
+        %%%%%%%%%%%%%onto the next step of merging.
+
+        %%%%%%%%Make a while loop that waits a bit than then checks
+       %%%we need to be checking for hear and then just quitting the loop           
+       % [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
+       % [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
+
+       %%%%%%%%If we're in parallel_flag==1 mode ignore this error, if
+       %%%%%%%%parallel_flag==0 then we need to figure something out
+
     end
 elseif var_exist1==2 && var_exist2==2
     %'It does exist, but do we keep loading? No, because we will be cleaning.'

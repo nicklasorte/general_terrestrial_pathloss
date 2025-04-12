@@ -6,14 +6,19 @@ disp_progress(app,strcat('Propagation Clean Up: Line 4'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Function: 
 cell_status_filename=strcat('cell_',string_prop_model,'_',num2str(sim_number),'_chunk_cleanup_status.mat')  
 label_single_filename=strcat(string_prop_model,'_',num2str(sim_number),'_chunk_cleanup_status')
+checkout_filename=strcat('TF_checkout_',string_prop_model,'_',num2str(sim_number),'_chunk_cleanup_status.mat')
 %location_table=table([1:1:length(folder_names)]',folder_names)
 
 %%%%%%%%%%Need a list because going through 470 folders takes 17 minutes
 %[cell_status]=initialize_or_load_generic_status_rev1(app,folder_names,cell_status_filename);
-[cell_status,folder_names]=initialize_or_load_generic_status_expand_rev2(app,rev_folder,cell_status_filename);
-if tf_reclean==1
-    cell_status(:,2)=num2cell(0);
-end
+% [cell_status,folder_names]=initialize_or_load_generic_status_expand_rev2(app,rev_folder,cell_status_filename);
+% if tf_reclean==1
+%     cell_status(:,2)=num2cell(0);
+% end
+tf_update_cell_status=0;
+sim_folder='';  %%%%%Empty sim_folder to not update.
+[cell_status]=checkout_cell_status_rev1(app,checkout_filename,cell_status_filename,sim_folder,folder_names,tf_update_cell_status);
+
 zero_idx=find(cell2mat(cell_status(:,2))==0);
 
 if ~isempty(zero_idx)==1
@@ -43,10 +48,14 @@ if ~isempty(zero_idx)==1
         %%%%%%%%checked.
         
         %%%%%%%Load
-        [cell_status]=initialize_or_load_generic_status_rev1(app,folder_names,cell_status_filename);
-        if tf_reclean==1
-            cell_status(:,2)=num2cell(0);
-        end
+        %[cell_status]=initialize_or_load_generic_status_rev1(app,folder_names,cell_status_filename);
+
+              %%%%%%%%%%%%%%Check cell_status
+        tf_update_cell_status=0;
+        sim_folder='';
+        [cell_status]=checkout_cell_status_rev1(app,checkout_filename,cell_status_filename,sim_folder,folder_names,tf_update_cell_status);
+
+
         sim_folder=temp_folder_names{array_rand_folder_idx(folder_idx)};
         temp_cell_idx=find(strcmp(cell_status(:,1),sim_folder)==1);
         
@@ -100,7 +109,12 @@ if ~isempty(zero_idx)==1
                 end
                 
                 %%%%%%%%Update the Cell
-                [cell_status]=update_generic_status_cell_rev1(app,folder_names,sim_folder,cell_status_filename);
+                %[~]=update_generic_status_cell_rev1(app,folder_names,sim_folder,cell_status_filename);
+                 %%%%%%%%Update the cell_status
+                tf_update_cell_status=1;
+                tic;
+                [~]=checkout_cell_status_rev1(app,checkout_filename,cell_status_filename,sim_folder,folder_names,tf_update_cell_status);
+                toc;
             else
                 %%%%%Persistent Load the other variables
                 %%%%%%disp_progress(app,strcat('Loading Sim Data . . . '))
@@ -253,7 +267,11 @@ if ~isempty(zero_idx)==1
                         pause(0.1)
                     end
                 end
-                [cell_status]=update_generic_status_cell_rev1(app,folder_names,sim_folder,cell_status_filename);
+                %[~]=update_generic_status_cell_rev1(app,folder_names,sim_folder,cell_status_filename);
+                 tf_update_cell_status=1;
+                tic;
+                [~]=checkout_cell_status_rev1(app,checkout_filename,cell_status_filename,sim_folder,folder_names,tf_update_cell_status);
+                toc;
                 disp_progress(app,strcat('Pathloss Clean up: Line 240: Just updated the cell_status'))
             end
         end
@@ -261,6 +279,7 @@ if ~isempty(zero_idx)==1
     end
     delete(multi_hWaitbarMsgQueue);
     close(multi_hWaitbar);
+    finish_cell_status_rev1(app,rev_folder,cell_status_filename)
 end
 disp_progress(app,strcat('Propagation Clean Up: Line 248: Ending'))
 %%%%server_status_rev1(app)
