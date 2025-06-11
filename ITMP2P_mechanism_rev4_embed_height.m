@@ -159,7 +159,17 @@ for i=1:num_bs  %%%%For Now, send in CBSD one at a time
 % % %         'ITM Error'
 % % %         pause;
     end
-    dBloss(i,:)=double(temp_dBloss);
+    
+    pathloss=double(temp_dBloss);
+    [pathloss]=fix_inf_pathloss_rev1(app,pathloss);
+    %dBloss(i,:)=double(temp_dBloss);
+    dBloss(i,:)=pathloss;
+
+    % if any(isinf(dBloss(i,:)))
+    % 
+    %     'Inf'
+    %     pause;
+    % end
 
 end
 
