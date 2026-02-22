@@ -1,6 +1,7 @@
 function [pathloss,prop_mode,tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode)
 
-
+%%%%%%%%Error is occuring somewhere in here when it it in parfor parallel_flag==1
+%%%%%%%%It gets choked here when there is too many servers hitting this
 
 sub_point_idx=array_rand_chunk_idx(chunk_idx);
 if parallel_flag==0
@@ -33,13 +34,20 @@ else
     sim_pt=base_protection_pts(point_idx,:);
     if parallel_flag==0
         disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 35: sub_point_idx:',num2str(sub_point_idx)))
-    end %%%%%%%%%%%This was the last check point before a stop.
+    end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%This was the last check point before a stop.[THIS IS the last successful checkpoint.]
 
     %%%%%%Check/Calculate path loss
     file_name_pathloss_chunk=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_pathloss_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
     file_name_propmode_chunk=strcat('sub_',num2str(sub_point_idx),'_',string_prop_model,'_prop_mode_',num2str(point_idx),'_',num2str(sim_number),'_',data_label1,'.mat');
     [var_exist1_chunk]=persistent_var_exist_with_corruption(app,file_name_pathloss_chunk);
     [var_exist2_chunk]=persistent_var_exist_with_corruption(app,file_name_propmode_chunk);
+
+    %%%%%%%%%%%Error occurs between
+    %%%%%%%%%%%parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 35:sub_point_idx and 
+    %%%%%%%%%%%parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 44: var_exist1_chunk
+    %%%%%%%%%%% Somewhere in the persistent_var_exist_with_corruption
+
+
     if parallel_flag==0
         disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 44: var_exist1_chunk:',num2str(var_exist1_chunk),'_',num2str(var_exist2_chunk)))
     end
