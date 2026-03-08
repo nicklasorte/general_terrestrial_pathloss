@@ -236,8 +236,6 @@ if ~isempty(zero_idx)==1
                         disp_progress(app,strcat('Part1 Calc Pathloss:: Line 230: Point Idx:Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
                         disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Pre-PARFOR Line 234: point_idx::Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
 
-                        %%%%%%%%%Error after this point.
-                        
                         if parallel_flag==1
                             parfor chunk_idx=1:num_chunks
                                 parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
@@ -275,8 +273,7 @@ if ~isempty(zero_idx)==1
                             pathloss=vertcat(cell_pathloss{:});
                             [num_pl,~]=size(pathloss);
                             if num_pl~=num_bs
-                                horzcat(num_pl,num_bs)
-                                disp_progress(app,strcat('Part1 Calc Pathloss: Line 262: Pause Error: Number of Pathloss/Base Station:',num2str(point_idx)))
+                                disp_progress(app,strcat('Part1 Calc Pathloss: Line 262: Pause Error: Number of Pathloss/Base Station: num_pl=',num2str(num_pl),' num_bs=',num2str(num_bs),' point_idx=',num2str(point_idx)))
                                 pause;
                             end
 
@@ -292,7 +289,6 @@ if ~isempty(zero_idx)==1
 
                             [num_rel]=length(reliability);
                             [num_path,num_pl_rel]=size(pathloss);
-                            [num_bs,~]=size(sim_array_list_bs);
                             if num_path~=num_bs
                                 disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 298: Pause Error: Number of Pathloss:',num2str(point_idx)))
                                 pause;
