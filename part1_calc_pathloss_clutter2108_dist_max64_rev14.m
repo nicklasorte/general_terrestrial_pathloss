@@ -238,143 +238,61 @@ if ~isempty(zero_idx)==1
 
                         %%%%%%%%%Error after this point.
                         
-                        %%%%%%%%Maybe we should check for all the
-                        %%%%%%%%subpoints, if they are there then just go
-                        %%%%%%%%straight into the for loop load, if not,
-                        %%%%%%%%then do the parfor for the compute.
-                        
                         if parallel_flag==1
-                            parfor chunk_idx=1:num_chunks  %%%%%%%%%Parfor
-                                %%%%%%parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                               %parfor_rand_parchunk_PropModel_precheck_debug_rev8(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                            parfor chunk_idx=1:num_chunks
                                 parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
                                 hWaitbarMsgQueue_pathloss.send(0);
                             end
                         end
                         disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Post PARFOR: Line 242: point_idx:',num2str(point_idx)))
                         disp_progress(app,strcat('Part1 Calc Pathloss:: Line 243: Post Parfor Chunks: Point Idx:',num2str(point_idx)))
-     
-                        %%%%%%%%%Then Assemble with for loop
+
+                        %%%%%%%%%Assemble with for loop
                         cell_pathloss=cell(num_chunks,1);
                         cell_prop_mode=cell(num_chunks,1);
-                        tf_stop_subchunk=0;
-                        for chunk_idx=1:num_chunks  %%%%%%%%%Parfor
-                            sub_point_idx=array_rand_chunk_idx(chunk_idx)
-                            horzcat(chunk_idx,sub_point_idx)
-
-                            if tf_stop_subchunk==0
-                                temp_parallel_flag=0
-                                disp_progress(app,strcat('Part1 Calc Pathloss:: PreForLoop Line 255: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx))) %%%%%%Rev 2.8 Stopping after this point in parfor_rand_parchunk_PropModel_precheck_debug_rev8
-                                disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: PRE-for loop: Line 256: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
-                                %%%%%%%[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                               %[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_debug_rev8(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
-                                disp_progress(app,strcat('Part1 Calc Pathloss:: PostForLoop Line 259: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
-                                disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: POST-for loop: Line 260: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
-                            end
-                            tf_stop_subchunk
-                            %%%%Once the tf_stop_subchunk
-
+                        for chunk_idx=1:num_chunks
+                            sub_point_idx=array_rand_chunk_idx(chunk_idx);
+                            temp_parallel_flag=0;
+                            disp_progress(app,strcat('Part1 Calc Pathloss:: PreForLoop Line 255: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
+                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: PRE-for loop: Line 256: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
+                            [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx}]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
+                            disp_progress(app,strcat('Part1 Calc Pathloss:: PostForLoop Line 259: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
+                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: POST-for loop: Line 260: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                             if parallel_flag==0
-                                %%%%%%%Decrement the waitbar
                                 hWaitbarMsgQueue_pathloss.send(0);
                             end
                         end
-                        server_status_rev2(app,tf_server_status) %%%%%%%%%%Send an update after we done all the heavy computation
+                        server_status_rev2(app,tf_server_status)
                         disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 271'))
 
-                        if tf_stop_subchunk==0 %%%%%%%Only save if we didn't stop the chunk
-                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 274'))
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Check to see if it exists before saving it.
+                        [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
+                        [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
+                        [var_exist3]=persistent_var_exist_with_corruption(app,file_name_clutter);
+                        disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 330:',num2str(var_exist1),'_',num2str(var_exist2)))
+                        if var_exist1==0 || var_exist2==0 || var_exist3==0
                             prop_mode=vertcat(cell_prop_mode{:});
                             pathloss=vertcat(cell_pathloss{:});
                             [num_pl,~]=size(pathloss);
-
                             if num_pl~=num_bs
                                 horzcat(num_pl,num_bs)
                                 disp_progress(app,strcat('Part1 Calc Pathloss: Line 262: Pause Error: Number of Pathloss/Base Station:',num2str(point_idx)))
                                 pause;
                             end
-                            %%%%server_status_rev1(app)
-                            %server_status_rev2(app,tf_server_status)
 
-               
-                            % if tf_clutter==1
-                            %     disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 288'))
-                            % 
-                            %     %%%%%%%%%%%%%%%%%%%%%%%Calculate Clutter
-                            %     [array_clutter]=clutter_p2108_50(app,FreqMHz);
-                            % 
-                            %     %%%%%%%%%%%%%%Calculate Distance
-                            %     sim_pt=base_protection_pts(point_idx,:);
-                            %     dist_km=deg2km(distance(sim_array_list_bs(:,1),sim_array_list_bs(:,2),sim_pt(1),sim_pt(2)));
-                            %     [nn_dist_idx]=nearestpoint_app(app,dist_km,array_clutter(:,1));
-                            %     clutter_loss=array_clutter(nn_dist_idx,2);
-                            % 
-                            %     %%%%%%%%%%%Height
-                            %     above6m_idx=find(sim_array_list_bs(:,3)>6);
-                            %     clutter_loss(above6m_idx)=0;
-                            % 
-                            %     %%%%%%%%%%%%%%%%Update pathloss
-                            %     pre_clutter_loss=pathloss;
-                            %     pathloss=pre_clutter_loss+clutter_loss;
-                            %     disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 306'))
-                            % end
-
-
-
-                            % % %      %%%%array_list_bs
-                            %%%%%%%1) Lat,
-                            % %%%%%2)Lon,
-                            % %%%%%3)BS height,
-                            % %%%%%4)BS EIRP Adjusted
-                            % %%%%%5) Nick Unique ID for each sector,
-                            % %%%%%6)NLCD: R==1/S==2/U==3,
-                            % %%%%%7) Azimuth
-                            % %%%%%8)BS EIRP Mitigation
-                             %%%%%%%9) Clutter IDX, 1==Urban, 2==Suburban, 3==Rural
-
-               
-
-                            %%%%%%%%%%%%%'Make the full distribution for each point'
                             if tf_clutter==3
-                                disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 288'))
-
-                                 %%%%%%%%%%%%%%Calculate Distance
                                 sim_pt=base_protection_pts(point_idx,:);
-                                dist_km=deg2km(distance(sim_array_list_bs(:,1),sim_array_list_bs(:,2),sim_pt(1),sim_pt(2)));                  
-
-                                [num_rel]=length(reliability)
-                                [num_path,num_pl_rel]=size(pathloss)
-                                [num_bs,~]=size(sim_array_list_bs)
-
-                                %%%%%%%%%%%%%%%%%%%%%%%Calculate Clutter: dist_km and reliability can be arrays
-                                clutter_loss=p2108_terrestrial_clutter_loss_vector(app, FreqMHz, dist_km,reliability);
-                                size(clutter_loss)
-
-                                %%%%%%Set the Rural Idx to 0dB
+                                dist_km=deg2km(distance(sim_array_list_bs(:,1),sim_array_list_bs(:,2),sim_pt(1),sim_pt(2)));
+                                clutter_loss=p2108_terrestrial_clutter_loss_vector(app,FreqMHz,dist_km,reliability);
                                 rural_idx=find(sim_array_list_bs(:,9)==3);
                                 clutter_loss(rural_idx,:)=0;
-                                % 'Start here before clutter, dont add, save separately'
-                                % %%9)Clutter IDX, 1==Urban, 2==Suburban, 3==Rural
-
                             else
-                                'No clutter but should still have a clutter array of zeros the same size'
-                                pause;
-                                [num_rel]=length(reliability)
-                                [num_path,num_pl_rel]=size(pathloss)
-                                [num_bs,~]=size(sim_array_list_bs)
-                                clutter_loss=zeros(num_bs,num_rel);
+                                clutter_loss=zeros(num_bs,length(reliability));
                             end
 
-                            %%%%%%%%%ITM prop mode decoder ring
-                            %%%% 0 LOS, 4 Single Horizon, 5 Difraction Double Horizon, 8 Double Horizon, 9 Difraction Single Horizon, 6 Troposcatter Single Horizon, 10 Troposcatter Double Horizon, 333 Error
-
-
-                            %%%%%Need to convert the ITM prop mode number to a string (later on).
-
-                            [num_rel]=length(reliability)
-                            [num_path,num_pl_rel]=size(pathloss)
-                            [num_bs,~]=size(sim_array_list_bs)
+                            [num_rel]=length(reliability);
+                            [num_path,num_pl_rel]=size(pathloss);
+                            [num_bs,~]=size(sim_array_list_bs);
                             if num_path~=num_bs
                                 disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 298: Pause Error: Number of Pathloss:',num2str(point_idx)))
                                 pause;
@@ -383,45 +301,24 @@ if ~isempty(zero_idx)==1
                                 disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 302: Pause Error: Number of Reliability:',num2str(point_idx)))
                                 pause;
                             end
-
-
-                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Check to see if it exists before saving it.
-                            [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
-                            [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
-                            [var_exist3]=persistent_var_exist_with_corruption(app,file_name_clutter);
-                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 330:',num2str(var_exist1),'_',num2str(var_exist2)))
-                            if var_exist1==0 || var_exist2==0 || var_exist3==0
-                                if any(isnan(pathloss))
-                                    disp_progress(app,strcat('Part1 Calc Pathloss: Line 297: Pause Error: Pathloss is NaN:',num2str(point_idx)))
-                                    pause;
-                                end
-                                retry_save=1;
-                                while(retry_save==1)
-                                    try
-                                        save(file_name_pathloss,'pathloss')
-                                        save(file_name_prop_mode,'prop_mode')
-                                        save(file_name_clutter,'clutter_loss')
-                                        retry_save=0;
-                                    catch
-                                        retry_save=1;
-                                        pause(1)
-                                    end
+                            if any(isnan(pathloss(:)))
+                                disp_progress(app,strcat('Part1 Calc Pathloss: Line 297: Pause Error: Pathloss is NaN:',num2str(point_idx)))
+                                pause;
+                            end
+                            retry_save=1;
+                            while(retry_save==1)
+                                try
+                                    save(file_name_pathloss,'pathloss')
+                                    save(file_name_prop_mode,'prop_mode')
+                                    save(file_name_clutter,'clutter_loss')
+                                    retry_save=0;
+                                catch
+                                    retry_save=1;
+                                    pause(1)
                                 end
                             end
-                        elseif tf_stop_subchunk==1
-                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 350:'))
-                            %%%%%%%%%%%Just checking for me.
-                            [var_exist1]=persistent_var_exist_with_corruption(app,file_name_pathloss);
-                            [var_exist2]=persistent_var_exist_with_corruption(app,file_name_prop_mode);
-                            if var_exist1==2 && var_exist2==2 %%%%%%Both exist
-                                %%%%%%%%%%Nothing
-                            else
-                                disp_progress(app,strcat('Error: Part1 Calc Pathloss: Line 319: tf_stop_subchunk'))
-                                pause
-                            end
-                            disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 360:',num2str(var_exist1),'_',num2str(var_exist2)))
                         end
-                        server_status_rev2(app,tf_server_status)  %%%%%%%%%%%%Update after the save, before the clean up.
+                        server_status_rev2(app,tf_server_status)
                         disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 363:'))
 
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'This is where we then clean up the single point'

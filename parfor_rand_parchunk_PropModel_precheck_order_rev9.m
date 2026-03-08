@@ -1,4 +1,4 @@
-function [pathloss,prop_mode,tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks)
+function [pathloss,prop_mode]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks)
 
 %%%%%%%%Error is occuring somewhere in here when it it in parfor parallel_flag==1
 %%%%%%%%It gets choked here when there is too many servers hitting this
@@ -20,7 +20,6 @@ if var_exist1==2 && var_exist2==2
     if parallel_flag==0
         disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 22: var_exist1:',num2str(var_exist1),'_',num2str(var_exist2)))
     end
-    tf_stop_subchunk=1;
     prop_mode=NaN(1,1);
     pathloss=NaN(1,1);
 else
@@ -52,7 +51,7 @@ else
         disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 44: var_exist1_chunk:',num2str(var_exist1_chunk),'_',num2str(var_exist2_chunk)))
     end
 
-    tf_stop_subchunk=0; %%%%%%%Large file doesn't exist, keep going.
+    %%%%%%%Large file doesn't exist, keep going.
     %%%%%%%%%%%%%%%%%%%%%%%Large file does not exist, see if we need to calculate the sub-chunk
     if var_exist1_chunk==2 && var_exist2_chunk==2 && parallel_flag==0 %%%%%%%%%%%%%We should only load in the non-parllel
         if parallel_flag==0
