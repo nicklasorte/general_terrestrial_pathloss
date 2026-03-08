@@ -167,13 +167,7 @@ if ~isempty(zero_idx)==1
 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%This is where we define the num_chunks
                 dyn_chunks=ceil(num_bs/1000)
-                if dyn_chunks<24
-                    num_chunks=24;
-                elseif dyn_chunks>64
-                    num_chunks=64;
-                else
-                    num_chunks=dyn_chunks;
-                end
+                num_chunks=max([24,dyn_chunks])
 
                 chuck_size=floor(num_bs/num_chunks);
                 cell_sim_chuck_idx=cell(num_chunks,1);
@@ -253,7 +247,7 @@ if ~isempty(zero_idx)==1
                             parfor chunk_idx=1:num_chunks  %%%%%%%%%Parfor
                                 %%%%%%parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
                                %parfor_rand_parchunk_PropModel_precheck_debug_rev8(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                                parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
+                                parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
                                 hWaitbarMsgQueue_pathloss.send(0);
                             end
                         end
@@ -274,7 +268,7 @@ if ~isempty(zero_idx)==1
                                 disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: PRE-for loop: Line 256: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                                 %%%%%%%[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_rev7(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
                                %[cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_debug_rev8(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);
-                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode);                              
+                                [cell_pathloss{sub_point_idx},cell_prop_mode{sub_point_idx},tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,temp_parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks);
                                 disp_progress(app,strcat('Part1 Calc Pathloss:: PostForLoop Line 259: point_idx:sub_point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                                 disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: POST-for loop: Line 260: point_idx:',num2str(point_idx),'_',num2str(sub_point_idx)))
                             end

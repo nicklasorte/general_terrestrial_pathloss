@@ -1,11 +1,11 @@
-function [pathloss,prop_mode,tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode)
+function [pathloss,prop_mode,tf_stop_subchunk]=parfor_rand_parchunk_PropModel_precheck_order_rev9(app,cell_sim_chuck_idx,sim_array_list_bs,base_protection_pts,sim_number,data_label1,reliability,confidence,FreqMHz,Tpol,parallel_flag,point_idx,string_prop_model,array_rand_chunk_idx,chunk_idx,file_name_pathloss,file_name_prop_mode,num_chunks)
 
 %%%%%%%%Error is occuring somewhere in here when it it in parfor parallel_flag==1
 %%%%%%%%It gets choked here when there is too many servers hitting this
 
 sub_point_idx=array_rand_chunk_idx(chunk_idx);
 if parallel_flag==0
-    disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 7: sub_point_idx:',num2str(sub_point_idx))) 
+    disp_TextArea_PastText(app,strcat('parfor_rand_parchunk_PropModel_precheck_order_rev9: Line 7: sub_point_idx:',num2str(sub_point_idx),'_num_chunks:',num2str(num_chunks)))
 end
 
 %%%%Check if the big file is there before
