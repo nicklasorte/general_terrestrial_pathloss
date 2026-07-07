@@ -238,6 +238,8 @@ if ~isempty(zero_idx)==1
                     if var_exist1==0 || var_exist2==0
                         disp_progress(app,strcat('Part1 Calc Pathloss:: Line 230: Point Idx:Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
                         disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Pre-PARFOR Line 234: point_idx::Var1-Var2:',num2str(point_idx),'_',num2str(var_exist1),'_',num2str(var_exist2)))
+
+                        %%%%%%%%%Error after this point.
                         
                         %%%%%%%%Maybe we should check for all the
                         %%%%%%%%subpoints, if they are there then just go
@@ -297,6 +299,9 @@ if ~isempty(zero_idx)==1
                             end
                             %%%%server_status_rev1(app)
                             %server_status_rev2(app,tf_server_status)
+
+                            'Start here before clutter, dont add, save separately'
+                            pause;
 
                             if tf_clutter==1
                                 disp_TextArea_PastText(app,strcat('part1_calc_pathloss_clutter2108_folders_rev12: Line 288'))

@@ -1,7 +1,7 @@
 function  [array_clutter]=clutter_p2108_50(app,FreqMHz)
 
 freq_GHz=FreqMHz/1000
-dist_km=0.25:0.01:2;  %%%%%%km Can't exceed 2km
+%dist_km=0.25:0.01:2;  %%%%%%km Can't exceed 2km
 dist_km=0:0.01:2;  %%%%%%km Can't exceed 2km
 
 %%%%ITU-R Clutter 3.2 (No Clutter Loss for less than 250m), Use this for the Base Station Clutter Loss, Use 3.1 for Handset Clutter

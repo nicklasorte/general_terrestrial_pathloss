@@ -23,7 +23,7 @@ function [array_dist_pl]=itm_area_dist_array_sea_rev2(app,reliability,tx_height_
         TxHtm=tx_height_m;
         RxHtm=rx_height_m;
 
-       array_dist_km=1:1:max_itm_dist_km;
+       array_dist_km=unique(horzcat([0.01:0.005:0.1],[0.1:0.01:1],1:0.1:max_itm_dist_km));
        [num_dist]=length(array_dist_km);
        array_dist_pl=NaN(num_dist,2);
        array_dist_pl(:,1)=array_dist_km';
